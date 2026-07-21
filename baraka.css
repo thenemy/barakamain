@@ -514,3 +514,20 @@ footer .brand{color:#fff;}
 }
 .yt-facade:hover .yt-play{background:var(--rust);}
 .yt-facade:focus-visible{outline:3px solid var(--gold);outline-offset:-3px;}
+
+/* ===== Плейсхолдер спикера (пока нет фото) ===== */
+.speaker-ph{
+  width:100%;aspect-ratio:4/3.4;
+  background:linear-gradient(150deg, var(--green-light) 0%, var(--paper-2) 100%);
+  display:flex;align-items:center;justify-content:center;
+  border-bottom:1px solid var(--line);
+}
+.speaker-ph span{
+  font-family:var(--display);font-weight:700;font-size:52px;
+  color:var(--green);opacity:0.42;letter-spacing:0.04em;
+}
+/* В hero-блоке лендинга — своя пропорция и скругление */
+.hero-photo .speaker-ph.hero-ph{
+  aspect-ratio:3/3.6;max-width:380px;margin:0 auto;
+  border-radius:var(--radius);border:1px solid var(--line);
+}

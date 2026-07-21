@@ -109,3 +109,16 @@ function initQuiz(config) {
 
   go(0);
 }
+
+/* ---------- Аккордеон: открыт только один (фолбэк для браузеров без details[name]) ---------- */
+(function () {
+  var supportsName = 'name' in document.createElement('details');
+  if (supportsName) return;
+  document.addEventListener('toggle', function (e) {
+    var d = e.target;
+    if (d.tagName !== 'DETAILS' || !d.open || !d.name) return;
+    document.querySelectorAll('details[name="' + d.name + '"]').forEach(function (o) {
+      if (o !== d) o.open = false;
+    });
+  }, true);
+})();

@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="baraka.css">
+<link rel="stylesheet" href="baraka.css?v=3">
 </head>
 <body id="top">
 
@@ -114,13 +114,6 @@
         <p>Kursni nazariyotchi emas, har kuni real kompaniyalar bilan ishlaydigan amaliyotchi buxgalter olib boradi.</p>
       </div>
     </div>
-    <div class="pays">
-      <img src="img/payme.webp" alt="Payme">
-      <img src="img/click.webp" alt="Click" style="filter:invert(0.8);">
-      <img src="img/paynet.webp" alt="Paynet">
-      <img src="img/Uzum_Nasiya-01.webp" alt="Uzum Nasiya">
-      <img src="img/paylater.webp" alt="Paylater" style="filter:invert(0.8);">
-    </div>
   </div>
 </section>
 
@@ -151,7 +144,7 @@
     <h2 class="section-title">"Buxgalteriya: 0 dan mutaxassisgacha" kurs dasturi</h2>
     <div class="program">
 
-      <details class="mod" open>
+      <details class="mod" name="prog">
         <summary>
           <span class="mnum">Bepul</span>
           <span class="mtitle">Demo darslar — kursni sinab ko'ring</span>
@@ -167,7 +160,7 @@
         </div>
       </details>
 
-      <details class="mod">
+      <details class="mod" name="prog">
         <summary>
           <span class="mnum">1-bo'lim</span>
           <span class="mtitle">Nazariya — buxgalteriya asoslari</span>
@@ -190,7 +183,7 @@
         </div>
       </details>
 
-      <details class="mod">
+      <details class="mod" name="prog">
         <summary>
           <span class="mnum">2-bo'lim</span>
           <span class="mtitle">1C — noldan professional darajagacha</span>
@@ -223,7 +216,7 @@
         </div>
       </details>
 
-      <details class="mod">
+      <details class="mod" name="prog">
         <summary>
           <span class="mnum">3-bo'lim</span>
           <span class="mtitle">Onlayn buxgalteriya — davlat tizimlari</span>
@@ -276,15 +269,15 @@
     <h2 class="section-title">Sizni kutayotgan yo'l — bosqichma-bosqich</h2>
     <p class="lead" style="margin-bottom:26px;">Kursni boshlaganingizdan barqaror daromadgacha — har bir bosqich va uning muddati.</p>
     <div class="roadmap">
-      <div class="rstep t-study"><div class="dot">1</div><div><h4>Nazariya</h4><div class="dur">2 hafta</div></div></div>
-      <div class="rstep t-study"><div class="dot">2</div><div><h4>1C dasturi</h4><div class="dur">4 hafta</div></div></div>
-      <div class="rstep t-study"><div class="dot">3</div><div><h4>Saytlar (Didox, Soliq.uz)</h4><div class="dur">2 hafta</div></div></div>
-      <div class="rstep t-work"><div class="dot">4</div><div><h4>Rezyume</h4><div class="dur">2 kun</div></div></div>
-      <div class="rstep t-work"><div class="dot">5</div><div><h4>Suhbatga tayyorgarlik</h4><div class="dur">2 kun</div></div></div>
-      <div class="rstep t-work"><div class="dot">6</div><div><h4>Ish topish</h4><div class="dur">2 hafta</div></div></div>
-      <div class="rstep t-result"><div class="dot">7</div><div><h4>Birinchi daromad</h4><div class="dur">4 hafta</div></div></div>
-      <div class="rstep t-result"><div class="dot">8</div><div><h4>Malaka + tajriba</h4><div class="dur">davomiy</div></div></div>
-      <div class="rstep t-goal"><div class="dot">9</div><div><h4>Barqarorlik</h4><div class="dur">maqsad</div></div></div>
+      <div class="rstep t-study"><div class="dot">1</div><div class="rbody"><h4>Nazariya</h4><div class="dur">2 hafta</div></div></div>
+      <div class="rstep t-study"><div class="dot">2</div><div class="rbody"><h4>1C dasturi</h4><div class="dur">4 hafta</div></div></div>
+      <div class="rstep t-study"><div class="dot">3</div><div class="rbody"><h4>Saytlar (Didox, Soliq.uz)</h4><div class="dur">2 hafta</div></div></div>
+      <div class="rstep t-work"><div class="dot">4</div><div class="rbody"><h4>Rezyume</h4><div class="dur">2 kun</div></div></div>
+      <div class="rstep t-work"><div class="dot">5</div><div class="rbody"><h4>Suhbatga tayyorgarlik</h4><div class="dur">2 kun</div></div></div>
+      <div class="rstep t-work"><div class="dot">6</div><div class="rbody"><h4>Ish topish</h4><div class="dur">2 hafta</div></div></div>
+      <div class="rstep t-result"><div class="dot">7</div><div class="rbody"><h4>Birinchi daromad</h4><div class="dur">4 hafta</div></div></div>
+      <div class="rstep t-result"><div class="dot">8</div><div class="rbody"><h4>Malaka + tajriba</h4><div class="dur">davomiy</div></div></div>
+      <div class="rstep t-goal"><div class="dot">9</div><div class="rbody"><h4>Barqarorlik</h4><div class="dur">maqsad</div></div></div>
     </div>
     <div class="roadmap-legend">
       <span><i style="background:var(--green-deep)"></i> O'qish</span>
@@ -337,37 +330,48 @@
   <div class="wrap">
     <h2 class="section-title">Ko'p beriladigan savollar</h2>
     <div class="program">
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">Buxgalteriya haqida hech narsa bilmayman — kursni tushuna olamanmi?</span></summary>
         <div class="mbody"><p>Ha. Kurs aynan 0 dan boshlanadi: avval nazariy asoslar, keyin 1C va onlayn tizimlar. Har bir mavzu sodda tilda, real misollar bilan tushuntiriladi, savollaringizga kuratorlar javob beradi.</p></div>
       </details>
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">Darslar qanday formatda o'tadi?</span></summary>
         <div class="mbody"><p>Onlayn videodarsliklar — istalgan vaqtda, istalgan joyda ko'rasiz. Har darsdan keyin amaliy topshiriq bor, natijalarni kurator tekshiradi.</p></div>
       </details>
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">O'qish uchun kuniga qancha vaqt kerak?</span></summary>
         <div class="mbody"><p>Kuniga 1–1,5 soat yetarli. Asosiy o'quv qismi (nazariya + 1C + saytlar) o'rtacha 2 oyda o'tiladi — roadmap'da har bosqich muddati ko'rsatilgan.</p></div>
       </details>
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">1C dasturini qayerdan olaman? Kompyuter shartmi?</span></summary>
         <div class="mbody"><p>Dasturni o'rnatish kursning birinchi darsida bosqichma-bosqich ko'rsatiladi. 1C bilan ishlash uchun oddiy kompyuter yoki noutbuk yetarli — kuchli texnika shart emas.</p></div>
       </details>
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">To'lovni bo'lib to'lasam bo'ladimi?</span></summary>
         <div class="mbody"><p>Ha. Naqd to'lovdan tashqari nasiya orqali bo'lib to'lash imkoniyati bor — Payme, Click, Paynet, Uzum Nasiya va Paylater orqali.</p></div>
       </details>
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">Kurs yakunida hujjat beriladimi?</span></summary>
         <div class="mbody"><p>Ha, kursni muvaffaqiyatli tugatganingizda sertifikat bilan taqdirlanasiz — u ishga joylashishda va mijozlar bilan ishlashda ishonch qo'shadi.</p></div>
       </details>
-      <details class="mod">
+      <details class="mod" name="faq">
         <summary><span class="mtitle">Kursdan keyin ish topishda yordam berasizlarmi?</span></summary>
         <div class="mbody"><p>Dasturga rezyume tayyorlash va suhbatga tayyorgarlik bosqichlari kiritilgan — ish topish yo'lini birga bosib o'tamiz.</p></div>
       </details>
     </div>
   </div>
 </section>
+
+<section class="section"><div class="wrap">
+    <div class="pays" style="margin-top:0;border-top:none;padding-top:0;">
+      <div class="pays-label">To'lov usullari</div>
+      <img src="img/payme.webp" alt="Payme">
+      <img src="img/click.webp" alt="Click" style="filter:invert(0.8);">
+      <img src="img/paynet.webp" alt="Paynet">
+      <img src="img/Uzum_Nasiya-01.webp" alt="Uzum Nasiya">
+      <img src="img/paylater.webp" alt="Paylater" style="filter:invert(0.8);">
+    </div>
+  </div></section>
 
 <!-- QUIZ -->
 <section class="section" id="quiz-section">

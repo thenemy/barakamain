@@ -122,3 +122,18 @@ function initQuiz(config) {
     });
   }, true);
 })();
+
+/* ---------- YouTube-фасад: подгружаем плеер только по клику ---------- */
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('.yt-facade');
+  if (!btn) return;
+  var id = btn.dataset.id;
+  var f = document.createElement('iframe');
+  f.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0';
+  f.title = btn.getAttribute('aria-label') || 'Video';
+  f.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  f.referrerPolicy = 'strict-origin-when-cross-origin';
+  f.allowFullscreen = true;
+  f.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0';
+  btn.replaceWith(f);
+});

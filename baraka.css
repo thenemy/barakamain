@@ -320,3 +320,103 @@ footer .brand{color:#fff;}
   padding:16px 0 26px;font-size:13px;color:rgba(255,255,255,0.75);
 }
 .footer-bottom a:hover{color:var(--gold);}
+
+/* ===== Roadmap ===== */
+.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:rstep;}
+@media(max-width:820px){.roadmap{grid-template-columns:1fr 1fr;}}
+@media(max-width:540px){.roadmap{grid-template-columns:1fr;}}
+.rstep{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px 20px;display:flex;gap:14px;align-items:flex-start;
+}
+.rstep .dot{
+  flex:none;width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--display);font-weight:700;font-size:15px;color:#fff;
+  background:var(--green-deep);
+}
+.rstep.t-study .dot{background:var(--green-deep);}
+.rstep.t-work .dot{background:var(--green);}
+.rstep.t-result .dot{background:var(--gold);color:var(--green-deep);}
+.rstep.t-goal .dot{background:#0B2418;}
+.rstep h4{font-family:var(--display);font-size:15.5px;font-weight:700;color:var(--green-deep);margin:2px 0 4px;line-height:1.3;}
+.rstep .dur{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--muted);}
+.rstep.t-result .dur{color:#A87F1F;}
+.roadmap-legend{
+  display:flex;gap:20px;flex-wrap:wrap;margin-top:18px;
+  font-size:13px;color:var(--muted);font-weight:600;
+}
+.roadmap-legend span{display:inline-flex;align-items:center;gap:8px;}
+.roadmap-legend i{width:11px;height:11px;border-radius:50%;display:inline-block;}
+
+/* ===== Fit / not fit ===== */
+.fit-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:760px){.fit-grid{grid-template-columns:1fr;}}
+.fit-col{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px;}
+.fit-col.no{border-color:#E3C7C0;}
+.fit-col h3{font-family:var(--display);font-size:18px;font-weight:700;margin:0 0 16px;color:var(--green-deep);display:flex;align-items:center;gap:10px;}
+.fit-col.no h3{color:var(--rust);}
+.fit-col ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:11px;}
+.fit-col li{font-size:14.5px;line-height:1.55;color:var(--ink-2);display:flex;gap:11px;align-items:flex-start;}
+.fit-col li::before{content:'✓';flex:none;width:21px;height:21px;border-radius:50%;
+  background:var(--green-light);color:var(--green);font-weight:700;font-size:12px;
+  display:inline-flex;align-items:center;justify-content:center;margin-top:1px;}
+.fit-col.no li::before{content:'✕';background:#F4E2DE;color:var(--rust);}
+
+/* ===== Proof stats (рынок) ===== */
+.proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:680px){.proof-grid{grid-template-columns:1fr;}}
+.proof{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  padding:26px 24px;
+}
+.proof .n{font-family:var(--display);font-weight:700;font-size:clamp(28px,3.6vw,40px);color:var(--green);line-height:1;}
+.proof.gold .n{color:var(--gold);}
+.proof .t{margin-top:9px;font-weight:700;font-size:15px;color:var(--green-deep);}
+.proof .s{margin-top:4px;font-size:13px;color:var(--muted);font-style:italic;}
+.proof-banner{
+  margin-top:16px;background:var(--green-deep);border-radius:var(--radius);
+  color:rgba(255,255,255,0.94);padding:20px 24px;font-size:15px;line-height:1.55;
+}
+.proof-banner b{color:var(--gold);}
+.proof-src{margin-top:10px;font-size:12px;color:var(--muted);text-align:right;font-style:italic;}
+
+/* ===== Video ===== */
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;}
+.video-item{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;
+}
+.video-item .frame{position:relative;aspect-ratio:16/9;background:var(--green-deep);}
+.video-item .frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+.video-item .cap{padding:14px 16px;font-size:14px;font-weight:600;color:var(--green-deep);line-height:1.4;}
+
+/* ===== FAQ ===== */
+.faq .mod summary{padding:18px 22px;}
+.faq .mtitle{font-size:15.5px;}
+.faq .mbody p{margin:12px 0 4px;}
+
+/* ===== Hero mini-roadmap (главная) ===== */
+.hero-path{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+  box-shadow:var(--shadow);padding:26px;display:flex;flex-direction:column;gap:0;
+  max-width:380px;margin:0 auto;width:100%;
+}
+.hp-step{display:flex;gap:14px;align-items:flex-start;}
+.hp-rail{display:flex;flex-direction:column;align-items:center;flex:none;}
+.hp-dot{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;background:var(--green-light);}
+.hp-line{width:2px;flex:1;min-height:22px;background:var(--line);}
+.hp-step:last-child .hp-line{display:none;}
+.hp-body{padding-bottom:20px;}
+.hp-step:last-child .hp-body{padding-bottom:0;}
+.hp-body b{display:block;font-family:var(--display);font-size:15.5px;color:var(--green-deep);}
+.hp-body span{font-size:13px;color:var(--muted);line-height:1.45;display:block;margin-top:3px;}
+.hp-step.gold .hp-dot{background:rgba(217,169,74,0.2);}
+
+/* Кнопки карточек прижаты к низу — одинаковая высота */
+.speaker .body{flex:1;}
+.speaker .body .btn{margin-top:auto;}
+
+/* ===== Отзывы учеников (вертикальное видео) ===== */
+.video-grid.vertical{grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:900px;margin:0 auto;}
+.video-grid.vertical .frame{aspect-ratio:9/16;}

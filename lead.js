@@ -64,9 +64,9 @@ function initQuiz(config) {
     '<p class="quiz-q">Ajoyib! Natijangizni menejerimiz siz bilan muhokama qiladi</p>' +
     '<div class="quiz-field"><label>Ismingiz</label><input type="text" id="q-name" placeholder="Ismingizni yozing" autocomplete="name"></div>' +
     '<div class="quiz-field"><label>Telefon raqamingiz</label><input type="tel" id="q-phone" placeholder="+998 90 123 45 67" autocomplete="tel"></div>' +
+    '<label class="quiz-agree"><input type="checkbox" id="q-agree" checked><span>Men <a href="/shartnoma" target="_blank" rel="noopener">ommaviy oferta shartlariga</a> roziman</span></label>' +
     '<button class="btn btn-primary btn-block" id="q-submit">Yuborish</button>' +
-    '<div class="quiz-err" id="q-err">Iltimos, ism va telefon raqamingizni to\'g\'ri kiriting.</div>' +
-    '<div class="quiz-note">Tugmani bosish orqali siz shaxsiy ma\'lumotlaringizni qayta ishlashga rozilik bildirasiz.</div>';
+    '<div class="quiz-err" id="q-err">Iltimos, ism, telefon raqamingizni to\'g\'ri kiriting va shartlarga rozilik bering.</div>';
   stepsWrap.appendChild(fin);
 
   // Экран «готово»
@@ -89,8 +89,9 @@ function initQuiz(config) {
   fin.querySelector('#q-submit').addEventListener('click', async function () {
     const name = fin.querySelector('#q-name').value.trim();
     const phone = fin.querySelector('#q-phone').value.trim();
+    const agree = fin.querySelector('#q-agree').checked;
     const err = fin.querySelector('#q-err');
-    if (name.length < 2 || phone.replace(/\D/g, '').length < 9) {
+    if (name.length < 2 || phone.replace(/\D/g, '').length < 9 || !agree) {
       err.style.display = 'block';
       return;
     }
@@ -101,6 +102,7 @@ function initQuiz(config) {
       course: config.courseName,
       name: name,
       phone: phone,
+      agree: agree,
       answers: answers
     });
     bar.style.width = '100%';

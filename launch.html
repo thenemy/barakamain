@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sotuv menejeri kursi — tariflar | Baraka Edu</title>
+<meta name="description" content="Sotuv menejeri kursi tariflari: ECONOM, STANDART, VIP va SHOGIRD. Joyingizni 350 000 sum oldindan to'lov bilan band qiling.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1F6B45">
+<link rel="icon" href="img/favicon.webp" type="image/webp">
+<link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="baraka.css?v=8">
+<link rel="stylesheet" href="launch.css?v=1">
+</head>
+<body id="top">
+
+<header>
+  <div class="header-inner">
+    <a class="brand" href="/">
+      <img loading="eager" decoding="async" width="82" height="82" src="img/logo.webp" alt="Baraka Edu">
+      BARAKA EDU
+    </a>
+    <div class="header-cta">
+      <a class="header-phone" href="tel:+998700800140">+998 70 080 01 40</a>
+      <a class="btn btn-primary btn-sm" href="#tariflar">Tarifni tanlash</a>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="lp-hero">
+  <div class="wrap">
+    <span class="eyebrow">Vebinar ishtirokchilari uchun</span>
+    <h1>Sotuv menejeri:<br><em>0 dan natijagacha</em></h1>
+    <p class="lead">
+      Nodirxon Pulatov bilan 5 modul, 15 dars. Har darsda amaliyot va test,
+      yakunda imtihon va sertifikat. Quyidan o'zingizga mos tarifni tanlang.
+    </p>
+    <div class="lp-timer" id="timer" aria-label="Kurs boshlanishigacha qolgan vaqt"></div>
+
+    <div class="lp-hero-actions">
+      <a class="btn btn-primary" href="#tariflar">Tariflarni ko'rish</a>
+      <a class="btn btn-ghost" id="tgAsk" target="_blank" rel="noopener">Savol berish</a>
+    </div>
+  </div>
+</section>
+
+<!-- TARIFLAR -->
+<section class="section" id="tariflar">
+  <div class="wrap">
+    <h2 class="section-title">Tarifni tanlang</h2>
+    <p class="lp-sub">
+      Joyni band qilish uchun <b>350 000 sum</b> oldindan to'lov yetarli.
+      Qolgan summa kurs boshlanishigacha to'lanadi.
+    </p>
+
+    <div class="tf-grid" id="tariffs"><!-- launch.js to'ldiradi --></div>
+
+    <p class="lp-foot">
+      Tarif bo'yicha savol bormi?
+      <a href="https://t.me/barakaedumanager" target="_blank" rel="noopener">Telegramda menejer bilan bog'laning</a>
+    </p>
+  </div>
+</section>
+
+<!-- MODAL: ARIZA -->
+<div class="lp-modal" id="modal" hidden>
+  <div class="lp-modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="lp-modal-x" id="modalClose" aria-label="Yopish">&times;</button>
+
+    <h3 id="modalTitle">Arizani to'ldiring</h3>
+    <div class="lp-picked">Tanlangan tarif: <b id="pickedTariff">—</b></div>
+
+    <form id="leadForm" novalidate>
+      <div class="quiz-field">
+        <label for="fName">Ismingiz</label>
+        <input type="text" id="fName" placeholder="Ismingizni yozing" autocomplete="name" required>
+      </div>
+
+      <div class="quiz-field">
+        <label for="fPhone">Telefon raqamingiz</label>
+        <input type="tel" id="fPhone" placeholder="+998 90 123 45 67" autocomplete="tel" required>
+      </div>
+
+      <label class="quiz-agree">
+        <input type="checkbox" id="fAgree" checked>
+        <span>Men <a href="/shartnoma" target="_blank" rel="noopener">ommaviy oferta shartlariga</a> roziman</span>
+      </label>
+
+      <button type="submit" class="btn btn-primary btn-block" id="fSubmit">Davom etish</button>
+
+      <div class="quiz-err" id="formErr">
+        Iltimos, ism va telefon raqamingizni to'g'ri kiriting va shartlarga rozilik bering.
+      </div>
+    </form>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-bottom">
+      <span>&copy; 2026 Baraka Edu</span>
+      <a href="/shartnoma">Ommaviy oferta</a>
+    </div>
+  </div>
+</footer>
+
+<script src="launch.js?v=1" defer></script>
+</body>
+</html>

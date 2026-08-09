@@ -221,8 +221,12 @@ function handleTariffSite(data, lock) {
     // ШАГ 2: ОСНОВНОЙ ЛИСТ "Website tarif" с дедупликацией
     // ============================================================
     try {
+      // Раньше здесь стоял getActiveSheet() как запасной вариант. Это опасно:
+      // insertSheet() выше делает НОВЫЙ лист активным, поэтому при отсутствии
+      // "Website tarif" 15 колонок тарифа молча уезжали в "All leads" или
+      // "Selling page". Теперь лист либо есть, либо создаётся явно по имени.
       var sheet = ss.getSheetByName("Website tarif");
-      if (!sheet) sheet = ss.getActiveSheet();
+      if (!sheet) sheet = ss.insertSheet("Website tarif");
 
       var last6Digits = phone.slice(-6);
       var lastRow = sheet.getLastRow();

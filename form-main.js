@@ -2,8 +2,9 @@
   document.getElementById('g-submit').addEventListener('click', async function(){
     const name = document.getElementById('g-name').value.trim();
     const phone = document.getElementById('g-phone').value.trim();
+    const agree = document.getElementById('g-agree').checked;
     const err = document.getElementById('g-err');
-    if(name.length < 2 || phone.replace(/\D/g,'').length < 9){
+    if(name.length < 2 || phone.replace(/\D/g,'').length < 9 || !agree){
       err.style.display = 'block';
       return;
     }
@@ -13,7 +14,10 @@
     await sendLead({
       course: 'Umumiy ariza (kurs tanlanmagan)',
       name: name,
-      phone: phone,
+      phone: phone9(phone),
+      source: 'Сайт Главная',
+      agreement: agree ? 'Принял' : 'Нет',
+      cols: {},
       answers: {}
     });
     document.getElementById('g-done').style.display = 'block';

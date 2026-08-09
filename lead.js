@@ -13,6 +13,7 @@ async function sendLead(payload) {
     await fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors', // Apps Script не отдаёт CORS-заголовки — ответ не читаем, но заявка доходит
+      keepalive: true, // заявка долетит, даже если страница уже уходит на /checkout
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(payload)
     });
@@ -23,13 +24,19 @@ async function sendLead(payload) {
   }
 }
 
+/* Телефон в таблицу пишем строго последними 9 цифрами: 998901234567 → 901234567 */
+function phone9(raw) {
+  return String(raw).replace(/\D/g, '').slice(-9);
+}
+
 /* ---------- Квиз ---------- */
 function initQuiz(config) {
   // config: { courseName, questions: [{q, opts:[...]}] }
   const card = document.getElementById('quiz');
   if (!card) return;
 
-  const answers = {};
+  const answers = {}; // вопрос → ответ (для сводной колонки и Telegram)
+  const cols = {};    // имя колонки в таблице → ответ
   let step = 0;
   const total = config.questions.length + 1; // + финальный шаг с контактами
 
@@ -50,6 +57,7 @@ function initQuiz(config) {
     div.querySelectorAll('.quiz-opt').forEach(btn => {
       btn.addEventListener('click', () => {
         answers[item.q] = btn.textContent;
+        if (item.col) cols[item.col] = btn.textContent;
         div.querySelectorAll('.quiz-opt').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         setTimeout(() => go(step + 1), 180);
@@ -98,13 +106,30 @@ function initQuiz(config) {
     err.style.display = 'none';
     this.disabled = true;
     this.textContent = 'Yuborilmoqda...';
+
+    const digits = phone9(phone);
+    const tariff = config.tariff || '';
+
     await sendLead({
       course: config.courseName,
       name: name,
-      phone: phone,
-      agree: agree,
+      phone: digits,
+      tariff: tariff,
+      source: 'Сайт Тариф',
+      agreement: agree ? 'Принял' : 'Нет',
+      cols: cols,
       answers: answers
     });
+
+    // Есть куда вести на оплату — уходим на чекаут, иначе показываем «готово»
+    if (config.checkoutUrl) {
+      location.href = config.checkoutUrl
+        + '?tariff=' + encodeURIComponent(tariff)
+        + '&name=' + encodeURIComponent(name)
+        + '&phone=' + encodeURIComponent(digits);
+      return;
+    }
+
     bar.style.width = '100%';
     go(allSteps.length - 1);
   });

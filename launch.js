@@ -4,7 +4,7 @@
    ============================================ */
 
 // ─── Таймер обратного отсчёта ──────────────────────
-const KURS_SANASI = new Date('2026-08-16T12:00:00'); // ⚠️ vebinardan oldin haqiqiy sanaga o'zgartiring
+const KURS_SANASI = new Date('2026-08-16T20:00:00+05:00'); // 16-avgust, 20:00 (Toshkent)
 
 (function initTimer() {
     const pad = n => String(n).padStart(2, '0');

@@ -1,190 +1,146 @@
 /**
- * BARAKA EDU — SALES LAUNCH
- * Отдельный Apps Script для продающей страницы (вебинарный лендинг с тарифами).
+ * BARAKA EDU — SELLING PAGE
+ * Приём заявок с продающей страницы в Google Таблицу.
  *
- * ПОЧЕМУ ОТДЕЛЬНЫЙ ПРОЕКТ:
- * в одном проекте Apps Script может быть только одна функция doPost().
- * В старом скрипте (форма оферты) doPost уже занят — поэтому этот скрипт
- * создаётся как НОВЫЙ проект со своей таблицей и своим URL.
+ * Колонки: A Дата | B Время | C Имя | D Телефон | E Договор | F Источник
+ * Шапка создаётся автоматически при первой заявке.
  *
- * УСТАНОВКА (5 минут):
- * 1. Создай новую Google Таблицу — например «Sales Launch».
- * 2. В ней: Extensions → Apps Script. Удали весь код-заглушку, вставь этот файл.
- * 3. Ничего заполнять не обязательно: лист и шапка создадутся сами при первой заявке.
- *    (TG_TOKEN / TG_CHAT_ID — только если нужны уведомления в Telegram.)
- * 4. Deploy → New deployment → тип Web app:
+ * УСТАНОВКА:
+ * 1. Новая Google Таблица → Extensions → Apps Script.
+ * 2. Удали код-заглушку, вставь этот файл, сохрани.
+ * 3. Deploy → New deployment → Web app:
  *       Execute as:      Me
- *       Who has access:  Anyone          ← обязательно, иначе заявки не дойдут
- * 5. Скопируй Web app URL (…/exec) и пришли мне — я вставлю его в код страницы.
+ *       Who has access:  Anyone     ← обязательно, иначе заявки не дойдут
+ * 4. Открой полученный /exec URL в браузере — должно ответить {"result":"ok"}.
  *
- * ПРОВЕРКА: открой полученный /exec URL прямо в браузере.
- * Должно ответить {"ok":true,...} — значит деплой рабочий.
- *
- * ВАЖНО: после каждого изменения кода нужно Deploy → Manage deployments →
- * Edit (карандаш) → Version: New version → Deploy. Иначе живёт старая версия.
+ * ВАЖНО: после правок кода — Deploy → Manage deployments → Edit (карандаш)
+ * → Version: New version → Deploy. Иначе на боевом URL останется старый код.
  */
 
-const TG_TOKEN   = '';               // токен от @BotFather (пусто — уведомления выключены)
-const TG_CHAT_ID = '';               // id чата/группы менеджеров
-const SHEET_NAME = 'Sales Launch';   // имя листа внутри таблицы
-const TZ         = 'Asia/Tashkent';
+var SHEET_NAME = 'Selling page';
+var HEADERS = ['Дата', 'Время', 'Имя', 'Телефон', 'Договор', 'Источник'];
 
-/* Шапка таблицы. Создаётся автоматически, если лист пустой.
-   Колонки можно переставлять и удалять прямо в таблице — скрипт пишет
-   ПО ИМЕНИ заголовка, а не по номеру, и молча пропускает то, чего нет. */
-const HEADERS = [
-  'Дата лида', 'Время', 'Имя', 'Телефон', 'Договор',
-  'Тариф', 'Источник', 'Maqsad', 'Иш холати', 'Работа',
-  'Sahifa', 'Quiz javoblari'
-];
-
-/* ---------- Приём заявки ---------- */
 function doPost(e) {
+  // Блокировка: при наплыве заявки пишутся по очереди и не путают строки.
+  var lock = LockService.getScriptLock();
   try {
-    if (!e || !e.postData) return out({ ok: false, error: 'no body' });
+    lock.waitLock(20000);
+  } catch (lockErr) {
+    // не смогли взять блокировку — всё равно пробуем записать
+  }
 
-    const data = JSON.parse(e.postData.contents);
-    const phone = normalizePhone(data.phone || '');
-    if (!phone) return out({ ok: false, error: 'no phone' });
+  try {
+    var raw = e && e.postData && e.postData.contents ? e.postData.contents : '';
+    var data = {};
+    try {
+      data = JSON.parse(raw);
+    } catch (parseErr) {
+      data = {};
+    }
 
-    const lead = {
-      name:      String(data.name || '').trim(),
-      phone:     phone,
-      tariff:    String(data.tariff || ''),
-      source:    String(data.source || 'Sales Launch'),
-      agreement: String(data.agreement || ''),
-      page:      String(data.page || ''),
-      cols:      data.cols || {},
-      answers:   data.answers || {}
-    };
+    var name      = (data.name || '').toString().trim();
+    var phoneRaw  = (data.phone || '').toString().trim();
+    var agreement = (data.agreement || 'Принял').toString().trim();
+    var source    = (data.source || 'Selling page').toString().trim();
 
-    const row = upsertLead(lead);
-    notifyTelegram(lead);
+    // Телефон: только цифры, последние 9 (901234567)
+    var phone = phoneRaw.replace(/\D/g, '');
+    if (phone.length > 9) phone = phone.slice(-9);
 
-    return out({ ok: true, row: row });
+    // Валидация
+    if (!name || phone.length < 9) {
+      releaseLock(lock);
+      return out({ result: 'rejected', reason: 'missing_fields' });
+    }
+
+    var now = new Date();
+    var tz = Session.getScriptTimeZone();
+    var dateStr = Utilities.formatDate(now, tz, 'yyyy-MM-dd');
+    var timeStr = Utilities.formatDate(now, tz, 'HH:mm:ss');
+
+    var sheet = getSheet();
+
+    // Дедупликация по последним 6 цифрам номера (столбец D)
+    var duplicateRow = findDuplicateRow(sheet, phone);
+
+    if (duplicateRow > 0) {
+      // Повторная заявка — обновляем, чтобы не плодить строки
+      sheet.getRange(duplicateRow, 1).setValue(dateStr);    // A Дата
+      sheet.getRange(duplicateRow, 2).setValue(timeStr);    // B Время
+      sheet.getRange(duplicateRow, 3).setValue(name);       // C Имя
+      sheet.getRange(duplicateRow, 5).setValue(agreement);  // E Договор
+      sheet.getRange(duplicateRow, 6).setValue(source);     // F Источник
+
+      releaseLock(lock);
+      return out({ result: 'success', status: 'DUPLICATE', row: duplicateRow });
+    }
+
+    sheet.appendRow([
+      dateStr,        // A Дата
+      timeStr,        // B Время
+      name,           // C Имя
+      "'" + phone,    // D Телефон (апостроф — чтобы не съело ведущий ноль)
+      agreement,      // E Договор
+      source          // F Источник
+    ]);
+
+    releaseLock(lock);
+    return out({ result: 'success', status: 'NEW', row: sheet.getLastRow() });
+
   } catch (err) {
-    return out({ ok: false, error: String(err) });
+    releaseLock(lock);
+    return out({ result: 'error', message: err.toString() });
   }
 }
 
-/* ---------- Проверка деплоя из браузера ---------- */
+/* Проверка деплоя прямо из браузера */
 function doGet() {
-  return out({ ok: true, sheet: SHEET_NAME, time: new Date().toISOString() });
-}
-
-/* ---------- Запись в таблицу: апсерт по телефону ---------- */
-function upsertLead(lead) {
-  const sh = getSheet();
-
-  // Заголовки → номер колонки (1-based), регистр не важен
-  const headers = sh.getRange(1, 1, 1, sh.getLastColumn()).getValues()[0];
-  const idx = {};
-  headers.forEach(function (h, i) {
-    const key = String(h).trim().toLowerCase();
-    if (key) idx[key] = i + 1;
-  });
-
-  const now = new Date();
-  const answersText = Object.keys(lead.answers)
-    .map(function (k) { return k + ' → ' + lead.answers[k]; })
-    .join('\n');
-
-  const values = {
-    'дата лида':       Utilities.formatDate(now, TZ, 'dd.MM.yyyy'),
-    'время':           Utilities.formatDate(now, TZ, 'HH:mm:ss'),
-    'имя':             lead.name,
-    'телефон':         lead.phone,
-    'договор':         lead.agreement,
-    'тариф':           lead.tariff,
-    'источник':        lead.source,
-    'sahifa':          lead.page,
-    'quiz javoblari':  answersText
-  };
-  // Ответы квиза, размеченные полем col в конфиге страницы
-  Object.keys(lead.cols).forEach(function (c) {
-    values[String(c).trim().toLowerCase()] = lead.cols[c];
-  });
-
-  const row = findRowByPhone(sh, idx['телефон'], lead.phone) || (sh.getLastRow() + 1);
-
-  Object.keys(values).forEach(function (key) {
-    const col = idx[key];
-    const val = values[key];
-    if (!col || val === '' || val === undefined) return;  // нет такой колонки — пропускаем
-    const cell = sh.getRange(row, col);
-    if (key === 'телефон') cell.setNumberFormat('@');     // чтобы не терялись ведущие цифры
-    cell.setValue(val);
-  });
-
-  return row;
+  return out({ result: 'ok', sheet: SHEET_NAME, time: new Date().toISOString() });
 }
 
 /* ---------- Лист: берём существующий или создаём с шапкой ---------- */
 function getSheet() {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  let sh = ss.getSheetByName(SHEET_NAME);
-
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(SHEET_NAME);
   if (!sh) sh = ss.insertSheet(SHEET_NAME);
 
   if (sh.getLastRow() === 0) {
     sh.appendRow(HEADERS);
-    const head = sh.getRange(1, 1, 1, HEADERS.length);
-    head.setFontWeight('bold').setBackground('#DCEEE2');
+    sh.getRange(1, 1, 1, HEADERS.length)
+      .setFontWeight('bold')
+      .setBackground('#DCEEE2');
     sh.setFrozenRows(1);
+    sh.setColumnWidth(3, 180);  // Имя
+    sh.setColumnWidth(4, 130);  // Телефон
   }
   return sh;
 }
 
-/* ---------- Поиск существующего лида по номеру ---------- */
-function findRowByPhone(sh, phoneCol, phone) {
-  if (!phoneCol) return null;
-  const last = sh.getLastRow();
-  if (last < 2) return null;
+/* ---------- Поиск дубля по последним 6 цифрам ---------- */
+function findDuplicateRow(sheet, phone) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return -1;
 
-  const vals = sh.getRange(2, phoneCol, last - 1, 1).getValues();
-  for (let i = 0; i < vals.length; i++) {
-    if (normalizePhone(String(vals[i][0])) === phone) return i + 2;
+  var tail = phone.slice(-6);
+  var values = sheet.getRange(2, 4, lastRow - 1, 1).getValues(); // столбец D, без шапки
+
+  for (var i = 0; i < values.length; i++) {
+    var existing = values[i][0].toString().replace(/\D/g, '');
+    if (existing.length >= 6 && existing.slice(-6) === tail) {
+      return i + 2; // +2: пропущенная шапка и переход к 1-based
+    }
   }
-  return null;
-}
-
-/* ---------- Уведомление менеджерам ---------- */
-function notifyTelegram(lead) {
-  if (!TG_TOKEN || !TG_CHAT_ID) return;
-
-  let text = '🔥 <b>Yangi ariza — Sales Launch</b>\n\n' +
-    (lead.tariff ? '🏷 Tarif: <b>' + esc(lead.tariff) + '</b>\n' : '') +
-    '👤 Ism: ' + esc(lead.name) + '\n' +
-    '📞 Tel: <code>+998' + esc(lead.phone) + '</code>';
-
-  const keys = Object.keys(lead.answers);
-  if (keys.length) {
-    text += '\n\n📋 <b>Quiz javoblari:</b>';
-    keys.forEach(function (k) {
-      text += '\n▫️ ' + esc(k) + '\n   → <b>' + esc(lead.answers[k]) + '</b>';
-    });
-  }
-
-  UrlFetchApp.fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({ chat_id: TG_CHAT_ID, text: text, parse_mode: 'HTML' }),
-    muteHttpExceptions: true
-  });
+  return -1;
 }
 
 /* ---------- Утилиты ---------- */
-function normalizePhone(p) {
-  // В таблицу пишем строго 9 цифр: +998 90 123-45-67 → 901234567
-  const digits = String(p).replace(/\D/g, '');
-  return digits ? digits.slice(-9) : '';
-}
-
-function esc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function releaseLock(lock) {
+  if (!lock) return;
+  try { lock.releaseLock(); } catch (x) {}
 }
 
 function out(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }

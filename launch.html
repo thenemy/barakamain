@@ -1,111 +1,886 @@
+
 <!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sotuv menejeri kursi — tariflar | Baraka Edu</title>
-<meta name="description" content="Sotuv menejeri kursi tariflari: ECONOM, STANDART, VIP va SHOGIRD. Joyingizni 350 000 sum oldindan to'lov bilan band qiling.">
-<meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#1F6B45">
-<link rel="icon" href="img/favicon.webp" type="image/webp">
-<link rel="preload" href="fonts/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="fonts/space-grotesk-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="baraka.css?v=8">
-<link rel="stylesheet" href="launch.css?v=1">
+<title>Sotuv menejeri kursi — Tariflar | Baraka Edu</title>
+<meta name="description" content="Sotuv menejeri kursi tariflari — Nodirxon Pulatov bilan 0 dan natijagacha.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#123324;
+    --ink-2:#1E4A34;
+    --paper:#E9F3EC;
+    --paper-2:#DCEBE1;
+    --card:#FFFFFF;
+    --line:#C6DECD;
+    --green:#1F6B45;
+    --green-deep:#123D28;
+    --green-light:#DCEEE2;
+    --gold:#D9A94A;
+    --rust:#B54834;
+    --muted:#5E7568;
+    --white:#ffffff;
+    --shadow: 0 10px 34px -10px rgba(18,51,36,0.28);
+    --radius: 16px;
+    --display: 'Space Grotesk', sans-serif;
+    --body: 'Inter', sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    font-family:var(--body);
+    background:var(--paper);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%;display:block;}
+  a{color:inherit;text-decoration:none;}
+  button{font-family:inherit;cursor:pointer;}
+
+  .wrap{
+    max-width:1160px;
+    margin:0 auto;
+    padding:0 20px;
+  }
+
+  /* ===== Header ===== */
+  header{
+    position:sticky;
+    top:0;
+    z-index:40;
+    background:rgba(233,243,236,0.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 20px;
+    max-width:1160px;
+    margin:0 auto;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    font-family:var(--display);
+    font-weight:700;
+    font-size:17px;
+    letter-spacing:0.01em;
+    color:var(--green-deep);
+  }
+  .brand img{height:30px;width:auto;border-radius:6px;}
+
+  /* ===== Buttons ===== */
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    border:none;
+    border-radius:11px;
+    padding:14px 22px;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:0.01em;
+    transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .btn:focus-visible{outline:3px solid var(--gold);outline-offset:2px;}
+  .btn-primary{
+    background:var(--green);
+    color:#fff;
+  }
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:var(--shadow);background:var(--green-deep);}
+  .btn-vip{
+    background:var(--gold);
+    color:var(--green-deep);
+  }
+  .btn-vip:hover{transform:translateY(-1px);box-shadow:0 10px 30px -8px rgba(217,169,74,0.6);background:#E4B860;}
+  .btn-sm{padding:11px 18px;font-size:14px;}
+  .btn-block{width:100%;}
+
+  /* ===== Hero (compact, no long copy) ===== */
+  .hero{
+    padding:38px 0 30px;
+    overflow:hidden;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.2fr 0.8fr;
+    gap:36px;
+    align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    font-weight:600;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--green-deep);
+    background:var(--green-light);
+    border-radius:999px;
+    padding:6px 14px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{content:'●';font-size:9px;color:var(--green);}
+  h1{
+    font-family:var(--display);
+    font-size:clamp(28px, 4vw, 44px);
+    line-height:1.12;
+    font-weight:700;
+    margin:0 0 22px;
+    letter-spacing:-0.01em;
+    color:var(--green-deep);
+  }
+  h1 em{
+    font-style:normal;
+    background:linear-gradient(180deg, transparent 60%, var(--gold) 60%);
+    padding:0 2px;
+  }
+
+  .countdown-label{
+    font-size:13px;
+    font-weight:700;
+    color:var(--ink-2);
+    margin-bottom:10px;
+  }
+  .countdown{display:flex;gap:9px;}
+  .countdown .cell{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:11px;
+    padding:10px 4px;
+    text-align:center;
+    min-width:58px;
+  }
+  .countdown .cell .num{
+    font-family:var(--mono);
+    font-size:22px;
+    font-weight:700;
+    color:var(--green-deep);
+    display:block;
+    font-variant-numeric:tabular-nums;
+  }
+  .countdown .cell .lbl{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--muted);
+  }
+
+  .hero-portrait{position:relative;display:flex;justify-content:center;}
+  .portrait-frame{
+    position:relative;
+    width:min(260px, 100%);
+    border-radius:18px;
+    padding:9px;
+    background:var(--card);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+  }
+  .portrait-frame img{
+    border-radius:12px;
+    width:100%;
+    aspect-ratio:3/4;
+    object-fit:cover;
+  }
+  .portrait-tag{
+    position:absolute;
+    bottom:-15px;left:50%;
+    transform:translateX(-50%) rotate(-2deg);
+    background:var(--green-deep);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:11.5px;
+    font-weight:600;
+    padding:7px 14px;
+    border-radius:8px;
+    white-space:nowrap;
+    box-shadow:0 6px 18px -6px rgba(0,0,0,0.35);
+  }
+
+  /* ===== Pricing ===== */
+  .pricing{padding:36px 0 40px;}
+  .section-head{text-align:center;max-width:520px;margin:0 auto 30px;}
+  .section-head h2{
+    font-family:var(--display);
+    font-size:clamp(24px,3.2vw,32px);
+    margin:0;
+    color:var(--green-deep);
+  }
+
+  .plans{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:20px;
+    align-items:stretch;
+  }
+  .plan{
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:var(--radius);
+    padding:24px 20px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .plan:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+
+  /* VIP - the featured, most prominent plan */
+  .plan.featured{
+    order:-1;
+    background:linear-gradient(160deg, var(--green-deep) 0%, #1B5238 100%);
+    border:none;
+    color:#fff;
+    box-shadow:0 20px 50px -14px rgba(18,61,40,0.55);
+    transform:scale(1.03);
+    padding:30px 24px;
+    z-index:2;
+  }
+  .plan.featured:hover{transform:scale(1.05) translateY(-4px);}
+  .plan.featured .plan-name{color:var(--gold);}
+  .plan.featured .plan-price .new{color:#fff;}
+  .plan.featured .plan-price .old{color:rgba(255,255,255,0.55);}
+  .plan.featured .plan-unit{color:rgba(255,255,255,0.65);}
+  .plan.featured .plan-divider{border-top-color:rgba(255,255,255,0.22);}
+  .plan.featured .plan-list li{color:rgba(255,255,255,0.92);}
+  .plan.featured .plan-group-label{color:rgba(255,255,255,0.55);}
+  .plan.featured .plan-slots{color:var(--gold);}
+  .plan.featured .plan-book{color:rgba(255,255,255,0.65);}
+  .plan.featured .plan-book b{color:#fff;}
+
+  .plan-ribbon{
+    position:absolute;
+    top:-13px;left:50%;
+    transform:translateX(-50%);
+    background:var(--gold);
+    color:var(--green-deep);
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    padding:6px 16px;
+    border-radius:999px;
+    white-space:nowrap;
+    box-shadow:0 6px 16px -4px rgba(0,0,0,0.35);
+  }
+
+  .plan-slots{
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--rust);
+    font-weight:700;
+    margin-bottom:10px;
+  }
+  .plan-name{
+    font-family:var(--display);
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:var(--green-deep);
+    margin:0 0 10px;
+  }
+  .plan-offline-tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    letter-spacing:0.05em;
+    color:var(--green);
+    background:var(--green-light);
+    border-radius:6px;
+    padding:4px 9px;
+    margin-bottom:10px;
+  }
+  .plan-price{
+    display:flex;
+    align-items:baseline;
+    gap:9px;
+    margin-bottom:3px;
+    flex-wrap:wrap;
+  }
+  .plan-price .new{
+    font-family:var(--mono);
+    font-size:28px;
+    font-weight:700;
+    color:var(--green-deep);
+    font-variant-numeric:tabular-nums;
+  }
+  .plan-price .old{
+    font-family:var(--mono);
+    font-size:14.5px;
+    color:var(--muted);
+    text-decoration:line-through;
+    font-variant-numeric:tabular-nums;
+  }
+  .plan-unit{font-size:12.5px;color:var(--muted);margin-bottom:18px;}
+  .plan-divider{
+    border:none;
+    border-top:1px dashed var(--line);
+    margin:0 0 16px;
+  }
+  .plan-list{
+    list-style:none;
+    padding:0;margin:0 0 20px;
+    display:flex;flex-direction:column;gap:11px;
+  }
+  .plan-list li{
+    display:flex;
+    gap:9px;
+    align-items:flex-start;
+    font-size:14.5px;
+    line-height:1.45;
+    color:var(--ink);
+  }
+  .plan-list li .mark{flex:none;width:17px;height:17px;margin-top:1px;}
+  .plan-list li.off{color:var(--muted);}
+  .plan-list li.off .mark{opacity:0.4;}
+  .plan-group-label{
+    font-size:11.5px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--muted);
+    font-weight:700;
+    margin:4px 0 0px;
+  }
+  .plan-actions{
+    margin-top:auto;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .plan-book{
+    text-align:center;
+    font-size:12.5px;
+    color:var(--muted);
+  }
+  .plan-book b{color:var(--ink);font-family:var(--mono);}
+
+  /* ===== Deadline banner ===== */
+  .deadline{
+    background:var(--rust);
+    color:#FBEFE9;
+    padding:15px 0;
+    text-align:center;
+  }
+  .deadline .wrap{
+    display:flex;justify-content:center;align-items:center;gap:9px;flex-wrap:wrap;
+    font-size:14px;font-weight:600;
+  }
+  .deadline strong{font-family:var(--mono);}
+
+  /* ===== Footer ===== */
+  footer{padding:36px 0 28px;}
+  .footer-grid{
+    display:flex;
+    justify-content:space-between;
+    gap:24px;
+    flex-wrap:wrap;
+    align-items:center;
+    padding-bottom:20px;
+    margin-bottom:16px;
+  }
+  .footer-contact{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  .footer-contact a{font-size:15px;font-weight:600;color:var(--green-deep);}
+  .footer-social{display:flex;gap:10px;}
+  .footer-social a{
+    width:36px;height:36px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--green-deep);
+    transition:background .2s, color .2s;
+  }
+  .footer-social a:hover{background:var(--green);color:#fff;}
+  .footer-bottom{
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    font-size:12.5px;color:var(--muted);
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .footer-bottom a{text-decoration:underline;}
+
+  /* ===== Modal ===== */
+  .modal-overlay{
+    position:fixed;inset:0;
+    background:rgba(18,51,36,0.55);
+    display:none;align-items:center;justify-content:center;
+    padding:20px;z-index:100;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal{
+    background:var(--card);
+    border-radius:18px;
+    max-width:420px;width:100%;
+    padding:28px 26px 26px;
+    position:relative;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.4);
+    animation:modalIn .22s ease;
+  }
+  @keyframes modalIn{from{opacity:0;transform:translateY(10px) scale(0.98);}to{opacity:1;transform:none;}}
+  .modal-close{
+    position:absolute;top:16px;right:16px;
+    width:34px;height:34px;border-radius:9px;
+    border:1px solid var(--line);background:transparent;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--ink);
+  }
+  .modal-close:hover{background:var(--paper-2);}
+  .modal h3{font-family:var(--display);font-size:22px;margin:0 0 5px;color:var(--green-deep);}
+  .modal .modal-plan{font-size:14px;color:var(--green);font-weight:700;margin:0 0 20px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin-bottom:6px;}
+  .field input{
+    width:100%;border:1.5px solid var(--line);border-radius:10px;
+    padding:13px 14px;font-size:16px;font-family:var(--body);
+    background:var(--paper);color:var(--ink);
+  }
+  .field input:focus{outline:none;border-color:var(--green);}
+  .field.error input{border-color:var(--rust);}
+  .field .err-msg{font-size:12.5px;color:var(--rust);margin-top:5px;display:none;}
+  .field.error .err-msg{display:block;}
+  .agree.error span{color:var(--rust);}
+  .agree.error input{outline:2px solid var(--rust);outline-offset:2px;}
+  .agree{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--ink-2);margin:16px 0 18px;}
+  .agree input{margin-top:2px;}
+  .agree a{text-decoration:underline;}
+  .modal-success{text-align:center;padding:12px 0 4px;}
+  .modal-success .check{
+    width:56px;height:56px;border-radius:50%;
+    background:var(--green-light);color:var(--green);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 16px;
+  }
+  .modal-success h3{margin-bottom:8px;}
+  .modal-success p{color:var(--ink-2);font-size:14.5px;margin:0 0 20px;}
+  .hidden{display:none !important;}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s ease;}
+  .reveal.in{opacity:1;transform:none;}
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;transition:none !important;}
+    html{scroll-behavior:auto;}
+  }
+
+  /* ===== Responsive — mobile-first priority ===== */
+  @media(max-width:980px){
+    .plans{grid-template-columns:repeat(2,1fr);}
+    .plan.featured{grid-column:span 2;transform:none;}
+    .plan.featured:hover{transform:translateY(-4px);}
+  }
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;text-align:center;}
+    .hero-portrait{order:-1;margin-bottom:6px;}
+    .hero-grid .eyebrow, .hero-grid .countdown-label{justify-content:center;}
+    .countdown{justify-content:center;}
+    .portrait-frame{width:190px;}
+  }
+  @media(max-width:640px){
+    .header-inner{padding:12px 16px;}
+    .hero{padding:26px 0 20px;}
+    .plans{grid-template-columns:1fr;gap:18px;}
+    .plan.featured{grid-column:auto;}
+    .plan-name{font-size:22px;}
+    .plan-price .new{font-size:30px;}
+    .plan-list li{font-size:15.5px;}
+    footer{padding:28px 0 20px;}
+    .footer-grid{flex-direction:column;align-items:flex-start;gap:16px;}
+  }
+</style>
 </head>
-<body id="top">
+<body>
 
 <header>
   <div class="header-inner">
-    <a class="brand" href="/">
-      <img loading="eager" decoding="async" width="82" height="82" src="img/logo.webp" alt="Baraka Edu">
+    <a class="brand" href="#top">
+      <img src="img/logo.webp" alt="Baraka Edu">
       BARAKA EDU
     </a>
-    <div class="header-cta">
-      <a class="header-phone" href="tel:+998700800140">+998 70 080 01 40</a>
-      <a class="btn btn-primary btn-sm" href="#tariflar">Tarifni tanlash</a>
-    </div>
+    <a class="btn btn-primary btn-sm" href="#pricing">Tariflar</a>
   </div>
 </header>
 
-<!-- HERO -->
-<section class="lp-hero">
-  <div class="wrap">
-    <span class="eyebrow">Vebinar ishtirokchilari uchun</span>
-    <h1>Sotuv menejeri:<br><em>0 dan natijagacha</em></h1>
-    <p class="lead">
-      Nodirxon Pulatov bilan 5 modul, 15 dars. Har darsda amaliyot va test,
-      yakunda imtihon va sertifikat. Quyidan o'zingizga mos tarifni tanlang.
-    </p>
-    <div class="lp-timer" id="timer" aria-label="Kurs boshlanishigacha qolgan vaqt"></div>
+<main id="top">
 
-    <div class="lp-hero-actions">
-      <a class="btn btn-primary" href="#tariflar">Tariflarni ko'rish</a>
-      <a class="btn btn-ghost" id="tgAsk" target="_blank" rel="noopener">Savol berish</a>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Sotuv menejeri · 0 dan natijagacha</span>
+        <h1>Sotuvni <em>amalda</em> o'rganing va daromadga chiqing</h1>
+        <div>
+          <div class="countdown-label">⏱ Chegirma tugashiga qoldi</div>
+          <div class="countdown" id="countdown">
+            <div class="cell"><span class="num" id="cd-days">00</span><span class="lbl">kun</span></div>
+            <div class="cell"><span class="num" id="cd-hours">00</span><span class="lbl">soat</span></div>
+            <div class="cell"><span class="num" id="cd-mins">00</span><span class="lbl">daqiqa</span></div>
+            <div class="cell"><span class="num" id="cd-secs">00</span><span class="lbl">soniya</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-portrait">
+        <div class="portrait-frame">
+          <img src="img/NNN.webp" alt="Nodirxon Pulatov">
+          <div class="portrait-tag">Nodirxon Pulatov</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>Tarifni tanlang</h2>
+      </div>
+
+      <div class="plans">
+
+        <!-- ECONOM -->
+        <div class="plan reveal">
+          <div class="plan-slots">50 joy qoldi</div>
+          <div class="plan-name">ECONOM</div>
+          <div class="plan-price"><span class="new">1 990 000</span><span class="old">5 000 000</span></div>
+          <div class="plan-unit">so'm · kurs davomida</div>
+          <hr class="plan-divider">
+          <ul class="plan-list">
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>1-modul:</b>&nbsp;Sotuv fundamenti</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>2-modul:</b>&nbsp;Mijozni tushunish</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>3-modul:</b>&nbsp;Sotuv texnikasi</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>4-modul:</b>&nbsp;Narx va o‘sish</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>5-modul:</b>&nbsp;CRM va hisobot</li>
+            <li class="plan-group-label">Qo‘shimcha</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Shaxsiy kurator</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>24/7 yordam</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Haftasiga 3 marta Zoom uchrashuv</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Real mijozlar bazasi — amaliyot va real daromad</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Qo‘ng‘iroq yozuvlarini Nodirxon va kurator bilan tahlil</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Kursdan so‘ng Pushkin ofisimizda ishlash kafolati</li>
+          </ul>
+          <div class="plan-actions">
+            <button class="btn btn-primary btn-block" data-open-modal data-plan="ECONOM">Ro'yxatdan o'tish</button>
+            <div class="plan-book">Band qilish: <b>350 000</b> so'm</div>
+          </div>
+        </div>
+
+        <!-- STANDART -->
+        <div class="plan reveal">
+          <div class="plan-slots">35 joy qoldi</div>
+          <div class="plan-name">STANDART</div>
+          <div class="plan-price"><span class="new">4 390 000</span><span class="old">8 000 000</span></div>
+          <div class="plan-unit">so'm · kurs davomida</div>
+          <hr class="plan-divider">
+          <ul class="plan-list">
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>1-modul:</b>&nbsp;Sotuv fundamenti</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>2-modul:</b>&nbsp;Mijozni tushunish</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>3-modul:</b>&nbsp;Sotuv texnikasi</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>4-modul:</b>&nbsp;Narx va o‘sish</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>5-modul:</b>&nbsp;CRM va hisobot</li>
+            <li class="plan-group-label">Qo‘shimcha</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Shaxsiy kurator</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>24/7 yordam</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Haftasiga 3 marta Zoom uchrashuv</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Real mijozlar bazasi — amaliyot va real daromad</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Qo‘ng‘iroq yozuvlarini Nodirxon va kurator bilan tahlil</li>
+            <li class="off"><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="#5E7568" stroke-width="1.8" stroke-linecap="round"/></svg>Kursdan so‘ng Pushkin ofisimizda ishlash kafolati</li>
+          </ul>
+          <div class="plan-actions">
+            <button class="btn btn-primary btn-block" data-open-modal data-plan="STANDART">Ro'yxatdan o'tish</button>
+            <div class="plan-book">Band qilish: <b>350 000</b> so'm</div>
+          </div>
+        </div>
+
+        <!-- VIP - featured / main plan -->
+        <div class="plan featured reveal">
+          <div class="plan-ribbon">★ MENING TAVSIYAM</div>
+          <div class="plan-slots">50 joy qoldi</div>
+          <div class="plan-name">VIP</div>
+          <div class="plan-price"><span class="new">4 990 000</span><span class="old">10 000 000</span></div>
+          <div class="plan-unit">so'm · kurs davomida</div>
+          <hr class="plan-divider">
+          <ul class="plan-list">
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>1-modul:</b>&nbsp;Sotuv fundamenti</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>2-modul:</b>&nbsp;Mijozni tushunish</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>3-modul:</b>&nbsp;Sotuv texnikasi</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>4-modul:</b>&nbsp;Narx va o‘sish</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><b>5-modul:</b>&nbsp;CRM va hisobot</li>
+            <li class="plan-group-label">Qo‘shimcha — barchasi kiritilgan</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Shaxsiy kurator</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>24/7 yordam</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Haftasiga 3 marta Zoom uchrashuv</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Real mijozlar bazasi — amaliyot va real daromad</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Qo‘ng‘iroq yozuvlarini Nodirxon va kurator bilan tahlil</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#D9A94A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Kursdan so‘ng Pushkin ofisimizda ishlash kafolati</li>
+          </ul>
+          <div class="plan-actions">
+            <button class="btn btn-vip btn-block" data-open-modal data-plan="VIP">VIP tarifni tanlash</button>
+            <div class="plan-book">Band qilish: <b>350 000</b> so'm</div>
+          </div>
+        </div>
+
+        <!-- SHOGIRD -->
+        <div class="plan reveal">
+          <span class="plan-offline-tag">100% offline</span>
+          <div class="plan-slots">15 joy qoldi</div>
+          <div class="plan-name">SHOGIRD</div>
+          <div class="plan-price"><span class="new">14 990 000</span><span class="old">25 000 000</span></div>
+          <div class="plan-unit">so'm · kurs davomida</div>
+          <hr class="plan-divider">
+          <ul class="plan-list">
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>VIP tarifidagi barcha imkoniyatlar</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>BARAKA EDU ofisida jonli darslar</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Nodirxon bilan yuzma-yuz mentorlik</li>
+            <li class="plan-group-label">Qo'shimcha</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Ish topish kafolat dasturi</li>
+            <li><svg class="mark" viewBox="0 0 20 20" fill="none"><path d="M4 10l4 4 8-8" stroke="#1F6B45" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>1–2 oyda birinchi shaxsiy mijoz</li>
+          </ul>
+          <div class="plan-actions">
+            <button class="btn btn-primary btn-block" data-open-modal data-plan="SHOGIRD">Ro'yxatdan o'tish</button>
+            <div class="plan-book">Band qilish: <b>350 000</b> so'm</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- DEADLINE -->
+  <div class="deadline">
+    <div class="wrap">
+      Faqat <strong>16-avgustgacha</strong> chegirma — so'ng eski narxga qaytadi
     </div>
   </div>
-</section>
 
-<!-- TARIFLAR -->
-<section class="section" id="tariflar">
+</main>
+
+<footer id="contact">
   <div class="wrap">
-    <h2 class="section-title">Tarifni tanlang</h2>
-    <p class="lp-sub">
-      Joyni band qilish uchun <b>350 000 sum</b> oldindan to'lov yetarli.
-      Qolgan summa kurs boshlanishigacha to'lanadi.
-    </p>
-
-    <div class="tf-grid" id="tariffs"><!-- launch.js to'ldiradi --></div>
-
-    <p class="lp-foot">
-      Tarif bo'yicha savol bormi?
-      <a href="https://t.me/barakaedumanager" target="_blank" rel="noopener">Telegramda menejer bilan bog'laning</a>
-    </p>
-  </div>
-</section>
-
-<!-- MODAL: ARIZA -->
-<div class="lp-modal" id="modal" hidden>
-  <div class="lp-modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <button type="button" class="lp-modal-x" id="modalClose" aria-label="Yopish">&times;</button>
-
-    <h3 id="modalTitle">Arizani to'ldiring</h3>
-    <div class="lp-picked">Tanlangan tarif: <b id="pickedTariff">—</b></div>
-
-    <form id="leadForm" novalidate>
-      <div class="quiz-field">
-        <label for="fName">Ismingiz</label>
-        <input type="text" id="fName" placeholder="Ismingizni yozing" autocomplete="name" required>
+    <div class="footer-grid">
+      <a class="brand" href="#top">
+        <img src="img/logo.webp" alt="Baraka Edu">
+        BARAKA EDU
+      </a>
+      <div class="footer-contact">
+        <a href="tel:+998700800140">+998 70 080 01 40</a>
+        <a href="https://t.me/barakaeduchat">@baraka_edu</a>
+        <div class="footer-social">
+          <a href="https://t.me/barakaeduchat" aria-label="Telegram" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M21 4L3 11l6 2 2 6 3-4 5 3 2-14z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="https://instagram.com/barakaedu" aria-label="Instagram" target="_blank" rel="noopener">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="7" r="1" fill="currentColor"/></svg>
+          </a>
+        </div>
       </div>
-
-      <div class="quiz-field">
-        <label for="fPhone">Telefon raqamingiz</label>
-        <input type="tel" id="fPhone" placeholder="+998 90 123 45 67" autocomplete="tel" required>
-      </div>
-
-      <label class="quiz-agree">
-        <input type="checkbox" id="fAgree" checked>
-        <span>Men <a href="/shartnoma" target="_blank" rel="noopener">ommaviy oferta shartlariga</a> roziman</span>
-      </label>
-
-      <button type="submit" class="btn btn-primary btn-block" id="fSubmit">Davom etish</button>
-
-      <div class="quiz-err" id="formErr">
-        Iltimos, ism va telefon raqamingizni to'g'ri kiriting va shartlarga rozilik bering.
-      </div>
-    </form>
-  </div>
-</div>
-
-<footer>
-  <div class="wrap">
+    </div>
     <div class="footer-bottom">
-      <span>&copy; 2026 Baraka Edu</span>
+      <span>© 2026 Baraka Edu. Barcha huquqlar himoyalangan.</span>
       <a href="/shartnoma">Ommaviy oferta</a>
     </div>
   </div>
 </footer>
 
-<script src="launch.js?v=1" defer></script>
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close" aria-label="Yopish">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+
+    <div id="modal-form-view">
+      <h3 id="modal-title">Ro'yxatdan o'tish</h3>
+      <p class="modal-plan" id="modal-plan-label">Tanlangan tarif: Umumiy so'rov</p>
+
+      <form id="lead-form" novalidate>
+        <div class="field" id="field-name">
+          <label for="name">Ismingiz</label>
+          <input type="text" id="name" name="name" placeholder="Ism Familiya" autocomplete="name">
+          <div class="err-msg">Ismingizni kiriting</div>
+        </div>
+        <div class="field" id="field-phone">
+          <label for="phone">Telefon raqamingiz</label>
+          <input type="tel" id="phone" name="phone" placeholder="+998 90 123 45 67" autocomplete="tel" inputmode="tel">
+          <div class="err-msg">To'g'ri telefon raqam kiriting</div>
+        </div>
+        <label class="agree">
+          <input type="checkbox" id="agree" checked required>
+          <span>Men <a href="/shartnoma" target="_blank">ommaviy oferta</a> shartlariga roziman</span>
+        </label>
+        <button type="submit" class="btn btn-primary btn-block">Yuborish</button>
+      </form>
+    </div>
+
+    <div id="modal-success-view" class="modal-success hidden">
+      <div class="check">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <h3>Rahmat!</h3>
+      <p>So'rovingiz qabul qilindi. Tez orada siz bilan bog'lanamiz.</p>
+      <button class="btn btn-primary btn-block" id="modal-success-close">Yopish</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---- SOZLAMALAR -----------------------------------------------------
+   LEAD_URL — Apps Script veb-ilovasi (Google Sheets, "Selling page" listi).
+   COUNTDOWN_TO — chegirma tugash sanasi, vebinardan oldin o'zgartiring.
+   -------------------------------------------------------------------- */
+var LEAD_URL = 'https://script.google.com/macros/s/AKfycbz97aQC9hzCAMkBYNLLlAl34HkjMaF5OrS8JlK9wDIyHDKYb1a5kgT0NAzOC-0AnIhi/exec';
+var COUNTDOWN_TO = "2026-08-16T23:59:59+05:00";
+
+(function(){
+  var target = new Date(COUNTDOWN_TO).getTime();
+  function tick(){
+    var now = Date.now();
+    var diff = target - now;
+    if(diff < 0) diff = 0;
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000) / 60000);
+    var s = Math.floor((diff % 60000) / 1000);
+    var pad = function(n){ return String(n).padStart(2,'0'); };
+    document.getElementById('cd-days').textContent = pad(d);
+    document.getElementById('cd-hours').textContent = pad(h);
+    document.getElementById('cd-mins').textContent = pad(m);
+    document.getElementById('cd-secs').textContent = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {threshold:0.12});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  var overlay = document.getElementById('modal-overlay');
+  var formView = document.getElementById('modal-form-view');
+  var successView = document.getElementById('modal-success-view');
+  var planLabel = document.getElementById('modal-plan-label');
+  var lastFocused = null;
+
+  function openModal(planName){
+    planLabel.textContent = "Tanlangan tarif: " + planName;
+    formView.classList.remove('hidden');
+    successView.classList.add('hidden');
+    overlay.classList.add('open');
+    lastFocused = document.activeElement;
+    document.body.style.overflow = 'hidden';
+    setTimeout(function(){ document.getElementById('name').focus(); }, 50);
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if(lastFocused) lastFocused.focus();
+    document.getElementById('lead-form').reset();
+    clearErrors();
+  }
+  function clearErrors(){
+    document.getElementById('field-name').classList.remove('error');
+    document.getElementById('field-phone').classList.remove('error');
+  }
+
+  document.querySelectorAll('[data-open-modal]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      openModal(btn.getAttribute('data-plan') || 'Umumiy so\'rov');
+    });
+  });
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-success-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){
+    if(e.target === overlay) closeModal();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+  });
+
+  var phoneInput = document.getElementById('phone');
+  phoneInput.addEventListener('input', function(){
+    var digits = phoneInput.value.replace(/\D/g,'');
+    if(digits.startsWith('998')) digits = digits.slice(3);
+    digits = digits.slice(0,9);
+    var out = '+998';
+    if(digits.length > 0) out += ' ' + digits.slice(0,2);
+    if(digits.length > 2) out += ' ' + digits.slice(2,5);
+    if(digits.length > 5) out += ' ' + digits.slice(5,7);
+    if(digits.length > 7) out += ' ' + digits.slice(7,9);
+    phoneInput.value = out;
+  });
+  phoneInput.addEventListener('focus', function(){
+    if(!phoneInput.value) phoneInput.value = '+998 ';
+  });
+
+  document.getElementById('lead-form').addEventListener('submit', function(e){
+    e.preventDefault();
+    clearErrors();
+    var name = document.getElementById('name').value.trim();
+    var phoneDigits = phoneInput.value.replace(/\D/g,'');
+    var agreed = document.getElementById('agree').checked;
+    var valid = true;
+
+    if(name.length < 2){
+      document.getElementById('field-name').classList.add('error');
+      valid = false;
+    }
+    if(phoneDigits.length !== 12){
+      document.getElementById('field-phone').classList.add('error');
+      valid = false;
+    }
+    if(!agreed){
+      document.querySelector('.agree').classList.add('error');
+      valid = false;
+    }
+    if(!valid) return;
+
+    // Faqat oxirgi 9 raqam: Apps Script ham, checkout.html ham shu formatni kutadi
+    var phone9 = phoneDigits.slice(-9);
+    var plan = planLabel.textContent.replace('Tanlangan tarif: ', '');
+
+    var btn = e.target.querySelector('button[type=submit]');
+    btn.disabled = true;
+    btn.textContent = 'Yuborilmoqda...';
+
+    // lead_ prefiksi — Apps Script arizani "Selling page" listiga yo'naltiradi
+    fetch(LEAD_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify({
+        lead_name: name,
+        lead_phone: phone9,
+        lead_tariff: plan,
+        lead_agreement: 'Принял',
+        page: location.pathname
+      })
+    }).catch(function(err){
+      console.error('Lead send failed', err);
+    }).then(function(){
+      // 3-qadam: to'lov sahifasi
+      location.href = '/checkout?tariff=' + encodeURIComponent(plan) +
+                      '&name='  + encodeURIComponent(name) +
+                      '&phone=' + encodeURIComponent(phone9);
+    });
+  });
+})();
+</script>
+
 </body>
 </html>

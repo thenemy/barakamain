@@ -1,165 +1,217 @@
 /**
- * BARAKA EDU — приём заявок с barakaeducation.uz
- * Пишет лид в Google Таблицу (апсерт по телефону) + шлёт уведомление в Telegram.
+ * BARAKA EDU — ПРИЁМ ЗАЯВОК
  *
- * Скрипт работает ПО ЗАГОЛОВКАМ таблицы: он читает первую строку и кладёт
- * значения в колонки с совпадающими именами. Порядок колонок можно менять,
- * лишние — удалять; ничего в коде править не нужно.
+ * ОДНА таблица, ДВА листа, ОДИН скрипт, ОДИН doPost.
+ * (В проекте Apps Script doPost может быть только один — поэтому вход общий,
+ *  а заявки разводятся по листам ПО ПРЕФИКСУ ИМЁН ПОЛЕЙ.)
  *
- * Поддерживаемые заголовки (пишутся, если такая колонка есть):
- *   Дата лида · Время · Имя · Телефон · Договор · Источник · Тариф
- *   + любые колонки из quiz-*.js (Возраст, Bilim, Maqsad, Иш холати, Работа, ...)
- *   + Quiz javoblari — сводка всех ответов одной ячейкой
+ *   webinar_*  →  лист "Webinar page"   (страница с переходом в Telegram)
+ *                 Дата | Время | Имя | Телефон | Договор | Источник
+ *
+ *   lead_*     →  лист "Selling page"   (продающая страница с тарифами)
+ *                 Дата | Время | Имя | Телефон | Договор | Тариф
+ *
+ * Листы и шапки создаются сами при первой заявке — заранее ничего делать не нужно.
  *
  * УСТАНОВКА:
- * 1. Открой свою таблицу с лидами → Extensions → Apps Script → вставь этот код.
- * 2. Впиши SHEET_NAME — имя листа (см. ярлык внизу таблицы).
- * 3. Заполни TG_TOKEN / TG_CHAT_ID, если нужны уведомления в Telegram (необязательно).
- * 4. Deploy → New deployment → Web app:
- *      Execute as: Me
- *      Who has access: Anyone
- * 5. Полученный URL вставь в lead.js → APPS_SCRIPT_URL.
+ * 1. Одна Google Таблица → Extensions → Apps Script.
+ * 2. Удали код-заглушку, вставь этот файл, сохрани.
+ * 3. Deploy → New deployment → Web app:
+ *       Execute as:      Me
+ *       Who has access:  Anyone      ← обязательно, иначе заявки не дойдут
+ * 4. Открой полученный /exec в браузере — должно ответить {"result":"ok"}.
  *
- * Токен живёт ТОЛЬКО здесь — на фронтенд его не выносить никогда.
+ * ПОСЛЕ ЛЮБОЙ ПРАВКИ КОДА:
+ * Deploy → Manage deployments → Edit (карандаш) → Version: New version → Deploy.
+ * Без этого на боевом URL остаётся старая версия.
+ *
+ * ДОБАВИТЬ ТРЕТЬЮ СТРАНИЦУ: допиши блок в FORMS ниже — остальной код не трогается.
  */
 
-const TG_TOKEN   = '';        // токен от @BotFather (пусто — уведомления выключены)
-const TG_CHAT_ID = '';        // id группы/чата, куда падают заявки
-const SHEET_NAME = 'Leads';   // имя листа в таблице
-const TZ         = 'Asia/Tashkent';
+/* ============================================================
+   КОНФИГ ФОРМ
+   ============================================================ */
+var FORMS = [
+  {
+    prefix: 'webinar_',
+    sheet:  'Webinar page',
+    last:   'Источник',              // чем заполняется 6-я колонка
+    lastKey: 'source',
+    lastDefault: 'Webinar page'
+  },
+  {
+    prefix: 'lead_',
+    sheet:  'Selling page',
+    last:   'Тариф',
+    lastKey: 'tariff',
+    lastDefault: ''
+  }
+];
 
+var BASE_HEADERS = ['Дата', 'Время', 'Имя', 'Телефон', 'Договор'];
+var PHONE_COL = 4;   // столбец D — по нему ищем дубли
+
+
+/* ============================================================
+   ВХОД
+   ============================================================ */
 function doPost(e) {
+  // Блокировка: при наплыве заявки пишутся по очереди и не путают строки.
+  var lock = LockService.getScriptLock();
   try {
-    const data = JSON.parse(e.postData.contents);
+    lock.waitLock(20000);
+  } catch (lockErr) {
+    // не смогли взять блокировку — всё равно пробуем записать
+  }
 
-    const name    = String(data.name || '').trim();
-    const phone   = normalizePhone(data.phone || '');
-    const course  = String(data.course || '');
-    const tariff  = String(data.tariff || '');
-    const source  = String(data.source || 'Сайт');
-    const agree   = String(data.agreement || '');
-    const cols    = data.cols || {};
-    const answers = data.answers || {};
+  try {
+    var raw = e && e.postData && e.postData.contents ? e.postData.contents : '';
+    var data = {};
+    try {
+      data = JSON.parse(raw);
+    } catch (parseErr) {
+      data = {};
+    }
 
-    if (!phone) return out({ ok: false, error: 'no phone' });
+    // ---- РАЗВЕТВЛЕНИЕ ПО ПРЕФИКСУ ПОЛЕЙ ----
+    var form = detectForm(data);
+    if (!form) {
+      releaseLock(lock);
+      return out({ result: 'rejected', reason: 'unknown_form' });
+    }
 
-    upsertLead({
-      name: name, phone: phone, course: course, tariff: tariff,
-      source: source, agreement: agree, cols: cols, answers: answers
-    });
+    var res = saveLead(form, data);
+    releaseLock(lock);
+    return out(res);
 
-    notifyTelegram(name, phone, course, tariff, answers);
-
-    return out({ ok: true });
   } catch (err) {
-    return out({ ok: false, error: String(err) });
+    releaseLock(lock);
+    return out({ result: 'error', message: err.toString() });
   }
 }
 
-/* ---- Таблица: апсерт по телефону, запись по заголовкам ---- */
-function upsertLead(lead) {
-  const ss = SpreadsheetApp.getActiveSpreadsheet();
-  const sh = ss.getSheetByName(SHEET_NAME) || ss.getSheets()[0];
-  const lastCol = sh.getLastColumn();
-  if (!lastCol) throw new Error('Пустой лист: нужна строка заголовков');
-
-  // Заголовки → номер колонки (1-based)
-  const headers = sh.getRange(1, 1, 1, lastCol).getValues()[0];
-  const idx = {};
-  headers.forEach(function (h, i) {
-    const key = String(h).trim();
-    if (key) idx[key.toLowerCase()] = i + 1;
-  });
-
-  const now = new Date();
-  const answersText = Object.keys(lead.answers)
-    .map(function (k) { return k + ' → ' + lead.answers[k]; })
-    .join('\n');
-
-  // Что кладём в какие колонки
-  const values = {
-    'дата лида': Utilities.formatDate(now, TZ, 'dd.MM.yyyy'),
-    'время':     Utilities.formatDate(now, TZ, 'HH:mm:ss'),
-    'имя':       lead.name,
-    'телефон':   lead.phone,
-    'договор':   lead.agreement,
-    'источник':  lead.source,
-    'тариф':     lead.tariff,
-    'курс':      lead.course,
-    'quiz javoblari': answersText
-  };
-  // Ответы квиза, размеченные полем col в quiz-*.js
-  Object.keys(lead.cols).forEach(function (c) {
-    values[String(c).trim().toLowerCase()] = lead.cols[c];
-  });
-
-  const row = findRowByPhone(sh, idx['телефон'], lead.phone) || (sh.getLastRow() + 1);
-
-  Object.keys(values).forEach(function (key) {
-    const col = idx[key];
-    const val = values[key];
-    if (!col || val === '' || val === undefined) return;   // нет колонки / нечего писать
-    const cell = sh.getRange(row, col);
-    if (key === 'телефон') cell.setNumberFormat('@');      // чтобы не терять ведущие цифры
-    cell.setValue(val);
-  });
+/* Проверка деплоя прямо из браузера */
+function doGet() {
+  return out({ result: 'ok', time: new Date().toISOString() });
 }
 
-/* ---- Поиск существующего лида по номеру ---- */
-function findRowByPhone(sh, phoneCol, phone) {
-  if (!phoneCol) return null;
-  const last = sh.getLastRow();
-  if (last < 2) return null;
-
-  const vals = sh.getRange(2, phoneCol, last - 1, 1).getValues();
-  for (let i = 0; i < vals.length; i++) {
-    if (normalizePhone(String(vals[i][0])) === phone) return i + 2;
+/* Какая форма прислала заявку: ищем поля с известным префиксом */
+function detectForm(data) {
+  for (var i = 0; i < FORMS.length; i++) {
+    var p = FORMS[i].prefix;
+    if (data[p + 'name'] !== undefined || data[p + 'phone'] !== undefined) {
+      return FORMS[i];
+    }
   }
   return null;
 }
 
-/* ---- Telegram-уведомление менеджерам ---- */
-function notifyTelegram(name, phone, course, tariff, answers) {
-  if (!TG_TOKEN || !TG_CHAT_ID) return;
 
-  let text = '🔥 <b>Yangi ariza!</b>\n\n' +
-    (course ? '📚 Kurs: <b>' + esc(course) + '</b>\n' : '') +
-    (tariff ? '🏷 Tarif: <b>' + esc(tariff) + '</b>\n' : '') +
-    '👤 Ism: ' + esc(name) + '\n' +
-    '📞 Tel: <code>+998' + esc(phone) + '</code>';
+/* ============================================================
+   ЗАПИСЬ ЗАЯВКИ
+   ============================================================ */
+function saveLead(form, data) {
+  var p = form.prefix;
 
-  const keys = Object.keys(answers);
-  if (keys.length) {
-    text += '\n\n📋 <b>Quiz javoblari:</b>';
-    keys.forEach(function (k) {
-      text += '\n▫️ ' + esc(k) + '\n   → <b>' + esc(answers[k]) + '</b>';
-    });
+  var name      = (data[p + 'name'] || '').toString().trim();
+  var phoneRaw  = (data[p + 'phone'] || '').toString().trim();
+  var agreement = (data[p + 'agreement'] || 'Принял').toString().trim();
+
+  // 6-я колонка: Источник для вебинара, Тариф для продающей
+  var lastVal = (data[p + form.lastKey] || form.lastDefault).toString().trim();
+
+  // Телефон: только цифры, последние 9 → 901234567
+  var phone = phoneRaw.replace(/\D/g, '');
+  if (phone.length > 9) phone = phone.slice(-9);
+
+  if (!name || phone.length < 9) {
+    return { result: 'rejected', reason: 'missing_fields' };
   }
 
-  UrlFetchApp.fetch('https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage', {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({
-      chat_id: TG_CHAT_ID,
-      text: text,
-      parse_mode: 'HTML'
-    }),
-    muteHttpExceptions: true
-  });
+  var now = new Date();
+  var tz = Session.getScriptTimeZone();
+  var dateStr = Utilities.formatDate(now, tz, 'yyyy-MM-dd');
+  var timeStr = Utilities.formatDate(now, tz, 'HH:mm:ss');
+
+  var sheet = getSheet(form);
+
+  // Дедупликация по последним 6 цифрам номера
+  var dupRow = findDuplicateRow(sheet, phone);
+
+  if (dupRow > 0) {
+    sheet.getRange(dupRow, 1).setValue(dateStr);    // A Дата
+    sheet.getRange(dupRow, 2).setValue(timeStr);    // B Время
+    sheet.getRange(dupRow, 3).setValue(name);       // C Имя
+    sheet.getRange(dupRow, 5).setValue(agreement);  // E Договор
+    if (lastVal) sheet.getRange(dupRow, 6).setValue(lastVal);  // F Источник/Тариф
+    return { result: 'success', status: 'DUPLICATE', sheet: form.sheet, row: dupRow };
+  }
+
+  sheet.appendRow([
+    dateStr,        // A Дата
+    timeStr,        // B Время
+    name,           // C Имя
+    "'" + phone,    // D Телефон (апостроф — чтобы не потерять ведущий ноль)
+    agreement,      // E Договор
+    lastVal         // F Источник / Тариф
+  ]);
+
+  return { result: 'success', status: 'NEW', sheet: form.sheet, row: sheet.getLastRow() };
 }
 
-/* ---- Утилиты ---- */
-function normalizePhone(p) {
-  // В таблицу пишем строго 9 цифр: 998901234567 / +998 90 123-45-67 → 901234567
-  const digits = String(p).replace(/\D/g, '');
-  return digits ? digits.slice(-9) : '';
+
+/* ============================================================
+   ЛИСТЫ
+   ============================================================ */
+function getSheet(form) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sh = ss.getSheetByName(form.sheet);
+
+  // Только по имени. getActiveSheet() тут использовать нельзя:
+  // insertSheet() делает новый лист активным, и заявки уехали бы не туда.
+  if (!sh) sh = ss.insertSheet(form.sheet);
+
+  if (sh.getLastRow() === 0) {
+    var headers = BASE_HEADERS.concat([form.last]);
+    sh.appendRow(headers);
+    sh.getRange(1, 1, 1, headers.length)
+      .setFontWeight('bold')
+      .setBackground('#DCEEE2');
+    sh.setFrozenRows(1);
+    sh.setColumnWidth(3, 180);  // Имя
+    sh.setColumnWidth(4, 130);  // Телефон
+  }
+  return sh;
 }
 
-function esc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* Поиск дубля по последним 6 цифрам, начиная со 2-й строки (шапку не трогаем) */
+function findDuplicateRow(sheet, phone) {
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) return -1;
+
+  var tail = phone.slice(-6);
+  var vals = sheet.getRange(2, PHONE_COL, lastRow - 1, 1).getValues();
+
+  for (var i = 0; i < vals.length; i++) {
+    var existing = vals[i][0].toString().replace(/\D/g, '');
+    if (existing.length >= 6 && existing.slice(-6) === tail) {
+      return i + 2;   // +2: пропущенная шапка и переход к 1-based
+    }
+  }
+  return -1;
+}
+
+
+/* ============================================================
+   УТИЛИТЫ
+   ============================================================ */
+function releaseLock(lock) {
+  if (!lock) return;
+  try { lock.releaseLock(); } catch (x) {}
 }
 
 function out(obj) {
-  return ContentService.createTextOutput(JSON.stringify(obj))
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }

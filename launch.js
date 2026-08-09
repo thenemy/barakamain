@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const url = 'https://script.google.com/macros/s/AKfycbz97aQC9hzCAMkBYNLLlAl34HkjMaF5OrS8JlK9wDIyHDKYb1a5kgT0NAzOC-0AnIhi/exec';
 
             // Куда уходим после отправки
-            const checkoutUrl = `/checkout?tariff=${encodeURIComponent(selectedTariff)}&name=${encodeURIComponent(rawName)}&phone=${encodeURIComponent(final9Digits)}`;
+            const checkoutUrl = `checkout.html?tariff=${encodeURIComponent(selectedTariff)}&name=${encodeURIComponent(rawName)}&phone=${encodeURIComponent(final9Digits)}`;
 
             // Чтобы редирект не выполнился дважды (fetch + подстраховка по таймеру)
             let redirected = false;

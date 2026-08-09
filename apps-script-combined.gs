@@ -2,15 +2,24 @@
  * BARAKA EDU — ОБЪЕДИНЁННЫЙ ПРИЁМНИК ЗАЯВОК
  *
  * В одном проекте Apps Script может быть только один doPost(). Поэтому здесь
- * один вход, который РАЗВОДИТ заявки по листам в зависимости от поля "form":
+ * один вход, который РАЗВОДИТ заявки по листам ПО ИМЕНАМ ПОЛЕЙ.
  *
- *   form: "selling"  → лист "Selling page"  (Дата | Время | Имя | Телефон | Договор | Источник)
- *   всё остальное    → старая логика: "All leads" + "Website tarif"
+ * У каждой страницы — свой набор имён, они не пересекаются:
+ *
+ *   Продающая страница  → lead_name, lead_phone, lead_agreement, lead_source
+ *                         → лист "Selling page"
+ *                         (Дата | Время | Имя | Телефон | Договор | Источник)
+ *
+ *   Тарифный сайт       → name, phone, tariff, source, agreement
+ *                         → старая логика: "All leads" + "Website tarif"
  *
  * ПОЧЕМУ ЭТО БЕЗОПАСНО ДЛЯ ДЕЙСТВУЮЩЕГО САЙТА:
- * старая страница поля "form" не отправляет вообще. Значит условие никогда
- * не сработает, и её заявки идут по прежнему пути, байт в байт как раньше.
- * Новая продающая страница будет слать form:"selling" явно.
+ * старая страница шлёт "name"/"phone" и не знает про префикс lead_. Значит
+ * новая ветка для неё недостижима, её заявки идут прежним путём, байт в байт.
+ *
+ * ⚠️ ОБРАТНАЯ СТОРОНА: раз признак — само имя поля, опечатка в нём
+ * (lead_nаme, leadname) не даст ошибку, а тихо уведёт заявку в старый лист.
+ * Поэтому имена полей на странице менять нельзя без правки этого файла.
  *
  * ОБНОВЛЕНИЕ:
  * 1. Замени содержимое скрипта на этот файл.
@@ -39,9 +48,9 @@ function doPost(e) {
     data = {};
   }
 
-  // ---- РАЗВЕТВЛЕНИЕ ----
-  var form = (data.form || "").toString().trim().toLowerCase();
-  if (form === "selling") {
+  // ---- РАЗВЕТВЛЕНИЕ ПО ИМЕНАМ ПОЛЕЙ ----
+  // Пришло хоть одно поле с префиксом lead_ → это продающая страница.
+  if (data.lead_name !== undefined || data.lead_phone !== undefined) {
     return handleSellingPage(data, lock);
   }
 
@@ -63,10 +72,10 @@ var SELLING_HEADERS = ["Дата", "Время", "Имя", "Телефон", "Д
 
 function handleSellingPage(data, lock) {
   try {
-    var name      = (data.name || "").toString().trim();
-    var phoneRaw  = (data.phone || "").toString().trim();
-    var agreement = (data.agreement || "Принял").toString().trim();
-    var source    = (data.source || "Selling page").toString().trim();
+    var name      = (data.lead_name || "").toString().trim();
+    var phoneRaw  = (data.lead_phone || "").toString().trim();
+    var agreement = (data.lead_agreement || "Принял").toString().trim();
+    var source    = (data.lead_source || "Selling page").toString().trim();
 
     var phone = phoneRaw.replace(/\D/g, "");
     if (phone.length > 9) phone = phone.slice(-9);

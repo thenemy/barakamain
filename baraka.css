@@ -616,8 +616,17 @@ footer .brand{color:#fff;}
 }
 .co-pay-btn:hover{border-color:var(--green);transform:translateY(-1px);box-shadow:var(--shadow);}
 .co-pay-btn img{height:26px;width:auto;flex:0 0 auto;}
-/* Click / Paylater — белые логотипы, на светлой карточке их нужно инвертировать */
-.co-pay-btn img.inv,.co-inst-btn img.inv{filter:invert(0.8);}
+
+/* Click и Paylater — логотипы «под тёмный фон»: у Click синий значок с белым
+   текстом, у Paylater всё белое. Раньше их выворачивали через invert(0.8), из-за
+   чего синий Click становился оранжевым, а фирменный цвет терялся. Вместо этого
+   даём каждому его собственную подложку — логотипы остаются оригинальными. */
+.co-pay-btn img.on-dark{
+  background:#0B1220;
+  padding:6px 10px;
+  border-radius:8px;
+  box-sizing:content-box;
+}
 .co-pay-btn span{font-size:14px;font-weight:600;color:var(--ink-2);text-align:right;}
 
 .co-timer{text-align:center;font-size:12.5px;color:var(--muted);margin:16px 0 24px;}
@@ -634,6 +643,18 @@ footer .brand{color:#fff;}
 }
 .co-inst-btn:hover{border-color:var(--green);transform:translateY(-1px);box-shadow:var(--shadow);}
 .co-inst-btn img{max-height:26px;max-width:100%;width:auto;}
+
+/* Paylater — фирменный малиновый фон, как в их приложении: логотип белый,
+   поэтому кнопка заливается целиком, а не подложкой под картинкой. */
+.co-inst-btn.paylater{
+  background:#E1315B;
+  border-color:#E1315B;
+}
+.co-inst-btn.paylater:hover{
+  background:#D02950;
+  border-color:#D02950;
+  box-shadow:0 10px 30px -8px rgba(225,49,91,.55);
+}
 
 /* Yordam */
 .co-help{text-align:center;}
